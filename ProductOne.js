@@ -1,10 +1,16 @@
 'use client'
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useContext } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation'
 import Link from 'next/link';
 
+import { CartContext } from '../../../context/CartContext';
+
 const ProductOne = ({ productId }) => {
+
+  const { addToCart } = useContext(CartContext);
+  
+
   // console.warn("productId",productId)
   const [selectedImage, setSelectedImage] = useState('https://images.pexels.com/photos/717431/pexels-photo-717431.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
   const [activeIndex, setActiveIndex] = useState(0);
@@ -27,6 +33,10 @@ const ProductOne = ({ productId }) => {
   const [size, setSize] = useState('')
   const router = useRouter()
   const [sizes, setSizes] = useState([]);
+
+  const handleAddToCart = () => {
+    addToCart(product.slug, 1, product.Price, product.name, size, color);
+  };
 
   useEffect(() => {
     const getproduct = async () => {
@@ -206,13 +216,13 @@ const ProductOne = ({ productId }) => {
         </div>
 
         <div className="">
-          <div class="flex items-center my-2 w-1/3 md:w-1/4"><label class="block m-2 text-sm font-medium">Size: </label>
-          <a href="/product/pikachu-vector-design-tshirt-black-s"> <button class="mx-2 border-black dark:border-white rounded-lg border px-2 border-pink-500 bg-pink-100 dark:border-white dark:bg-pink-500 dark:text-white">S</button></a>
-          <a href="/product/pikachu-vector-design-tshirt-black-m"> <button class="mx-2 border-black dark:border-white rounded-lg border px-2 ">M</button></a><a href="/product/pikachu-vector-design-tshirt-black-l"> <button class="mx-2 border-black dark:border-white rounded-lg border px-2 ">L</button></a><a href="/product/pikachu-vector-design-tshirt-black-xl"> <button class="mx-2 border-black dark:border-white rounded-lg border px-2 ">XL</button></a><a href="/product/pikachu-vector-design-tshirt-black-xxl"> <button class="mx-2 border-black dark:border-white rounded-lg border px-2 ">XXL</button></a></div>
+          <div className="flex items-center my-2 w-1/3 md:w-1/4"><label className="block m-2 text-sm font-medium">Size: </label>
+          <a href="/product/pikachu-vector-design-tshirt-black-s"> <button className="mx-2 border-black dark:border-white rounded-lg border px-2 border-pink-500 bg-pink-100  dark:bg-pink-500 dark:text-white">S</button></a>
+          <a href="/product/pikachu-vector-design-tshirt-black-m"> <button className="mx-2 border-black dark:border-white rounded-lg border px-2 ">M</button></a><a href="/product/pikachu-vector-design-tshirt-black-l"> <button className="mx-2 border-black dark:border-white rounded-lg border px-2 ">L</button></a><a href="/product/pikachu-vector-design-tshirt-black-xl"> <button className="mx-2 border-black dark:border-white rounded-lg border px-2 ">XL</button></a><a href="/product/pikachu-vector-design-tshirt-black-xxl"> <button className="mx-2 border-black dark:border-white rounded-lg border px-2 ">XXL</button></a></div>
           </div>
 
           <div className='flex items-center my-2 w-1/3 md:w-1/4'>
-          <label class="block m-2 text-sm font-medium">Size: </label>
+          <label className="block m-2 text-sm font-medium">Size: </label>
           {color &&
           variants[color] &&
           Object.keys(variants[color]).map((hsize) => {
@@ -266,7 +276,7 @@ const ProductOne = ({ productId }) => {
             <span className="text-base">/month</span>
           </div>
 
-          <button type="button" className="inline-flex items-center justify-center rounded-md border-2 border-transparent bg-gray-900 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800">
+          <button type="button" className="inline-flex items-center justify-center rounded-md border-2 border-transparent bg-gray-900 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800" onClick={handleAddToCart}>
             <svg xmlns="http://www.w3.org/2000/svg" className="shrink-0 mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
             </svg>

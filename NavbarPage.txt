@@ -1,0 +1,168 @@
+'use client'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faHome, faInfo, faCogs, faEnvelope } from '@fortawesome/free-solid-svg-icons'
+import { usePathname } from 'next/navigation'
+import Link from 'next/link'
+import { useContext, useState } from 'react'
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+
+import { CartContext } from '../../../../context/CartContext'
+
+const Navbar = () => {
+    const pathname = usePathname()
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
+  const { addToCart } = useContext(CartContext);
+  const {clearCart} = useContext(CartContext);
+  const {removeFromCart} = useContext(CartContext);
+  const {cart} = useContext(CartContext);
+  const {subTotal} = useContext(CartContext);
+
+
+
+    return (
+        <div>
+            <header className="bg-pink-500 p-4">
+                <div className="container mx-auto">
+                    <div className="flex items-center justify-between">
+                        <div className="text-white font-semibold text-2xl">Wikimb</div>
+                        <nav className="hidden md:block space-x-4">
+                            {/* <a href="#" className="text-white hover:text-pink-300">Home</a> */}
+                            <Link className={`link ${pathname === '/public/home' ? 'text-stone-700' : ''} text-white hover:text-pink-300`} href="/public/home">Home</Link>
+                            <Link
+                                className={`link ${pathname === '/public/about' ? 'text-stone-700' : ''} text-white hover:text-pink-300`}
+                                href="/public/about"
+                            >
+                                About
+                            </Link>
+                            {/* <a href="#" className="text-stone-700">About</a> */}
+                            <Link
+                                className={`link ${pathname === '/about' ? 'active' : ''} text-white hover:text-pink-300`}
+                                href="/contact"
+                            >
+                                Contact
+                            </Link>
+                            <button onClick={clearCart}>clear cart</button>
+                            <ShoppingCartIcon className='text-white cursor-pointer' onClick={toggleModal} />
+                            {/* <a href="#" className="text-white hover:text-pink-300">Contact</a> */}
+                        </nav>
+                    </div>
+                </div>
+            </header>
+
+            <div className="md:hidden bg-pink-500 fixed bottom-0 left-0 right-0 p-4 flex justify-between z-40">
+                <a href="#" className="text-white hover:text-pink-300 flex-1 text-center">
+                    <FontAwesomeIcon icon={faHome} />
+                </a>
+                <a href="#" className="text-white hover:text-pink-300 flex-1 text-center">
+                    <FontAwesomeIcon icon={faInfo} />
+                </a>
+                <a href="#" className="text-white hover:text-pink-300 flex-1 text-center">
+                    <FontAwesomeIcon icon={faCogs} />
+                </a>
+                <a href="#" className="text-white hover:text-pink-300 flex-1 text-center">
+                    <FontAwesomeIcon icon={faEnvelope} />
+                </a>
+                <button className="text-white hover:text-pink-300 mx-4">More</button>
+            </div>
+
+            {/* Cart */}
+            
+
+
+
+
+
+
+{/* test */}
+{isModalOpen && (<div class="relative z-50" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+  
+    <div class="fixed inset-0 z-10 overflow-y-auto">
+      <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+        
+        <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-3xl">
+          <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+            <div class="sm:flex sm:items-start">
+                <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10 cursor-pointer" onClick={clearCart}>
+                  <svg className="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </div>
+              <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full">
+                <h3 class="text-base font-semibold leading-6 text-gray-900" id="modal-title">Cart</h3>
+                <div class="mt-2 space-y-6">
+                <ul class="-my-8">
+                                            {/* cart loop */}
+                                            {Object.keys(cart).length == 0 && <div className='mt-7'>Lemon chus Le</div>}
+                                            {Object.keys(cart).map((k)=>{
+                                                return <li class="flex flex-col space-y-3 py-6 text-left sm:flex-row sm:space-x-5 sm:space-y-0" key={k}>
+                                                <div class="shrink-0">
+                                                    <img class="h-24 w-24 max-w-full rounded-lg object-cover" src='https://images.pexels.com/photos/1391498/pexels-photo-1391498.jpeg?auto=compress&cs=tinysrgb&w=640&h=960&dpr=1' alt="" />
+                                                </div>
+
+                                                <div class="relative flex flex-1 flex-col justify-between">
+                                                    <div class="sm:col-gap-5 sm:grid sm:grid-cols-2">
+                                                        <div class="pr-8 sm:pr-5">
+                                                            <p class="text-base font-semibold text-gray-900">{cart[k].name}</p>
+                                                            <p class="mx-0 mt-1 mb-0 text-sm text-gray-400">{cart[k].size} - {cart[k].variant}</p>
+                                                        </div>
+
+                                                        <div class="mt-4 flex items-end justify-between sm:mt-0 sm:items-start sm:justify-end">
+                                                            <p class="shrink-0 w-20 text-base font-semibold text-gray-900 sm:order-2 sm:ml-8 sm:text-right">${cart[k].price * cart[k].qty}</p>
+
+                                                            <div class="sm:order-1">
+                                                                <div class="mx-auto flex h-8 items-stretch text-gray-600">
+                                                                    <button class="flex items-center justify-center rounded-l-md bg-gray-200 px-4 transition hover:bg-black hover:text-white" onClick={()=>{removeFromCart(k,1,cart[k].price,cart[k].name,cart[k].size,cart[k].variant)}}>-</button>
+                                                                    <div class="flex w-full items-center justify-center bg-gray-100 px-4 text-xs uppercase transition">{cart[k].qty}</div>
+                                                                    <button class="flex items-center justify-center rounded-r-md bg-gray-200 px-4 transition hover:bg-black hover:text-white" onClick={()=>{addToCart(k,1,cart[k].price,cart[k].name,cart[k].size,cart[k].variant)}}>+</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="absolute top-0 right-0 flex sm:bottom-0 sm:top-auto">
+                                                        <button type="button" class="flex rounded p-2 text-center text-gray-500 transition-all duration-200 ease-in-out focus:shadow hover:text-gray-900">
+                                                            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" class=""></path>
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            })}
+                                            
+                                        </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+          <div class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">Total - {subTotal}</div>
+            <button type="submit" class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">Checkout</button>
+            <button type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto" onClick={toggleModal}>Continue Shopping</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>)}
+
+
+
+
+
+{/* test */}
+
+
+
+        </div>
+    )
+}
+
+export default Navbar
