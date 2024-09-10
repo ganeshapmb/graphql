@@ -1,29 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 
 interface RowData {
+  id: number;
   group: string;
   athlete: string;
   sport: string;
   gold: number;
   silver: number;
   bronze: number;
+  isBlankRow?: boolean;
 }
 
 const MedalTable: React.FC = () => {
   const [rowData] = useState<RowData[]>([
-    { group: 'Country Active', athlete: 'Australia (524)', sport: '', gold: 0, silver: 0, bronze: 0 },
-    { group: 'Country Active', athlete: 'Canada (351)', sport: '', gold: 0, silver: 0, bronze: 0 },
-    { group: 'Country Active', athlete: 'Norway (158)', sport: '', gold: 0, silver: 0, bronze: 0 },
-    { group: 'Country Active', athlete: 'China (450)', sport: '', gold: 0, silver: 0, bronze: 0 },
-    { group: 'Country Active', athlete: 'Zimbabwe (2)', sport: '', gold: 0, silver: 0, bronze: 0 },
-    { group: 'Company Dancers', athlete: 'Netherlands (286)', sport: '', gold: 0, silver: 0, bronze: 0 },
-    { group: 'Company Dancers', athlete: 'South Korea (274)', sport: '', gold: 0, silver: 0, bronze: 0 },
-    { group: 'Company Dancers', athlete: 'Croatia (76)', sport: '', gold: 0, silver: 0, bronze: 0 },
-    { group: 'Company Dancers', athlete: 'France (287)', sport: '', gold: 0, silver: 0, bronze: 0 },
-    { group: 'Company Dancers', athlete: 'Japan (259)', sport: '', gold: 0, silver: 0, bronze: 0 },
+    { id: 1, group: 'Country Active', athlete: 'Australia (524)', sport: '', gold: 0, silver: 0, bronze: 0 },
+    { id: 2, group: 'Country Active', athlete: 'Canada (351)', sport: '', gold: 0, silver: 0, bronze: 0 },
+    { id: 3, group: 'Country Active', athlete: 'Norway (158)', sport: '', gold: 0, silver: 0, bronze: 0 },
+    { id: 4, group: 'Country Active', athlete: 'China (450)', sport: '', gold: 0, silver: 0, bronze: 0 },
+    { id: 5, group: 'Country Active', athlete: 'Zimbabwe (2)', sport: '', gold: 0, silver: 0, bronze: 0 },
+    { id: 6, group: 'Blank', athlete: '', sport: '', gold: 0, silver: 0, bronze: 0, isBlankRow: true },
+    { id: 7, group: 'Company Dancers', athlete: 'Netherlands (286)', sport: '', gold: 0, silver: 0, bronze: 0 },
+    { id: 8, group: 'Company Dancers', athlete: 'South Korea (274)', sport: '', gold: 0, silver: 0, bronze: 0 },
+    { id: 9, group: 'Company Dancers', athlete: 'Croatia (76)', sport: '', gold: 0, silver: 0, bronze: 0 },
+    { id: 10, group: 'Company Dancers', athlete: 'France (287)', sport: '', gold: 0, silver: 0, bronze: 0 },
+    { id: 11, group: 'Company Dancers', athlete: 'Japan (259)', sport: '', gold: 0, silver: 0, bronze: 0 },
   ]);
 
   const [columnDefs] = useState([
@@ -32,43 +35,74 @@ const MedalTable: React.FC = () => {
       rowGroup: true,
       hide: true
     },
-    { field: 'athlete', headerName: 'Athlete' },
+    { 
+      field: 'athlete',
+      headerName: 'Athlete',
+      cellRenderer: (params: any) => {
+        if (params.data && params.data.isBlankRow) {
+          return '';
+        }
+        return params.value;
+      }
+    },
     { field: 'sport', headerName: 'Sport' },
     { field: 'gold', headerName: 'Gold' },
     { field: 'silver', headerName: 'Silver' },
     { field: 'bronze', headerName: 'Bronze' },
   ]);
 
-  const defaultColDef = {
+  const defaultColDef = useMemo(() => ({
     flex: 1,
     minWidth: 100,
     sortable: true,
     filter: true,
-  };
+  }), []);
 
-  const autoGroupColumnDef = {
+  const autoGroupColumnDef = useMemo(() => ({
     headerName: 'Group',
     minWidth: 200,
     cellRenderer: 'agGroupCellRenderer',
     cellRendererParams: {
       checkbox: false,
     },
+  }), []);
+
+  const getRowClass = (params: any) => {
+    if (params.data && params.data.isBlankRow) {
+      return 'blank-row';
+    }
+    return '';
   };
 
   return (
     <div className="ag-theme-alpine" style={{ height: 400, width: '100%' }}>
+      <style>
+        {`
+          .blank-row {
+            background-color: #f0f0f0;
+            pointer-events: none;
+          }
+          .blank-row .ag-cell {
+            border-top: 1px solid #ccc;
+            border-bottom: 1px solid #ccc;
+          }
+        `}
+      </style>
       <AgGridReact
         rowData={rowData}
         columnDefs={columnDefs}
         defaultColDef={defaultColDef}
         autoGroupColumnDef={autoGroupColumnDef}
-        groupDefaultExpanded={1}
+        groupDefaultExpanded={-1}
         suppressRowClickSelection={true}
         groupSelectsChildren={true}
         rowSelection="multiple"
         rowGroupPanelShow="always"
         pivotPanelShow="always"
         pagination={true}
+        getRowClass={getRowClass}
+        isFullWidthCell={(rowNode) => rowNode.data && rowNode.data.isBlankRow}
+        fullWidthCellRenderer={(params) => ''}
       />
     </div>
   );
