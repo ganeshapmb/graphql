@@ -1,0 +1,77 @@
+import React, { useState } from 'react';
+import { AgGridReact } from 'ag-grid-react';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-alpine.css';
+
+interface RowData {
+  group: string;
+  athlete: string;
+  sport: string;
+  gold: number;
+  silver: number;
+  bronze: number;
+}
+
+const MedalTable: React.FC = () => {
+  const [rowData] = useState<RowData[]>([
+    { group: 'Country Active', athlete: 'Australia (524)', sport: '', gold: 0, silver: 0, bronze: 0 },
+    { group: 'Country Active', athlete: 'Canada (351)', sport: '', gold: 0, silver: 0, bronze: 0 },
+    { group: 'Country Active', athlete: 'Norway (158)', sport: '', gold: 0, silver: 0, bronze: 0 },
+    { group: 'Country Active', athlete: 'China (450)', sport: '', gold: 0, silver: 0, bronze: 0 },
+    { group: 'Country Active', athlete: 'Zimbabwe (2)', sport: '', gold: 0, silver: 0, bronze: 0 },
+    { group: 'Company Dancers', athlete: 'Netherlands (286)', sport: '', gold: 0, silver: 0, bronze: 0 },
+    { group: 'Company Dancers', athlete: 'South Korea (274)', sport: '', gold: 0, silver: 0, bronze: 0 },
+    { group: 'Company Dancers', athlete: 'Croatia (76)', sport: '', gold: 0, silver: 0, bronze: 0 },
+    { group: 'Company Dancers', athlete: 'France (287)', sport: '', gold: 0, silver: 0, bronze: 0 },
+    { group: 'Company Dancers', athlete: 'Japan (259)', sport: '', gold: 0, silver: 0, bronze: 0 },
+  ]);
+
+  const [columnDefs] = useState([
+    { 
+      field: 'group',
+      rowGroup: true,
+      hide: true
+    },
+    { field: 'athlete', headerName: 'Athlete' },
+    { field: 'sport', headerName: 'Sport' },
+    { field: 'gold', headerName: 'Gold' },
+    { field: 'silver', headerName: 'Silver' },
+    { field: 'bronze', headerName: 'Bronze' },
+  ]);
+
+  const defaultColDef = {
+    flex: 1,
+    minWidth: 100,
+    sortable: true,
+    filter: true,
+  };
+
+  const autoGroupColumnDef = {
+    headerName: 'Group',
+    minWidth: 200,
+    cellRenderer: 'agGroupCellRenderer',
+    cellRendererParams: {
+      checkbox: false,
+    },
+  };
+
+  return (
+    <div className="ag-theme-alpine" style={{ height: 400, width: '100%' }}>
+      <AgGridReact
+        rowData={rowData}
+        columnDefs={columnDefs}
+        defaultColDef={defaultColDef}
+        autoGroupColumnDef={autoGroupColumnDef}
+        groupDefaultExpanded={1}
+        suppressRowClickSelection={true}
+        groupSelectsChildren={true}
+        rowSelection="multiple"
+        rowGroupPanelShow="always"
+        pivotPanelShow="always"
+        pagination={true}
+      />
+    </div>
+  );
+};
+
+export default MedalTable;
