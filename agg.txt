@@ -1,0 +1,61 @@
+const rowData = [
+    { category: 'No of items', groupHeader: true, athlete: null, sport: null, gold: 5, silver: 10, bronze: 15 },
+    { category: 'Country Active', groupHeader: true, athlete: null, sport: null, gold: 20, silver: 29, bronze: 35 },
+    { category: 'Country Active', athlete: 'Australia (524)', sport: null, gold: null, silver: null, bronze: null },
+    { category: 'Country Active', athlete: 'Canada (351)', sport: null, gold: null, silver: null, bronze: null },
+    { category: 'Country Active', athlete: 'Norway (158)', sport: null, gold: null, silver: null, bronze: null },
+    { category: 'Country Active', athlete: 'China (450)', sport: null, gold: null, silver: null, bronze: null },
+    { category: 'Country Active', athlete: 'Zimbabwe (2)', sport: null, gold: null, silver: null, bronze: null },
+    {}, // This empty object represents the blank row
+    { category: 'Company Dancers', groupHeader: true, athlete: null, sport: null, gold: null, silver: null, bronze: null },
+    { category: 'Company Dancers', athlete: 'Netherlands (286)', sport: null, gold: null, silver: null, bronze: null },
+    { category: 'Company Dancers', athlete: 'South Korea (274)', sport: null, gold: null, silver: null, bronze: null },
+    { category: 'Company Dancers', athlete: 'Croatia (76)', sport: null, gold: null, silver: null, bronze: null },
+    { category: 'Company Dancers', athlete: 'France (287)', sport: null, gold: null, silver: null, bronze: null },
+    { category: 'Company Dancers', athlete: 'Japan (259)', sport: null, gold: null, silver: null, bronze: null }
+];
+
+const columnDefs = [
+    {
+        headerName: "Category",
+        field: "category",
+        rowGroup: true,
+        hide: true,
+    },
+    {
+        headerName: "Athlete",
+        field: "athlete",
+        cellClassRules: {
+            'groupHeader': 'data.groupHeader === true', // Add a CSS class for custom styling
+        },
+        cellRenderer: params => {
+            // Custom rendering logic for group headers
+            if (params.data && params.data.groupHeader) {
+                return `<strong>${params.data.category}</strong>`;
+            }
+            return params.value;
+        }
+    },
+    { field: 'sport', headerName: 'Sport' },
+    { field: 'gold', headerName: 'Gold' },
+    { field: 'silver', headerName: 'Silver' },
+    { field: 'bronze', headerName: 'Bronze' }
+];
+
+const gridOptions = {
+    columnDefs: columnDefs,
+    rowData: rowData,
+    groupUseEntireRow: true, // Group header will span across all columns
+    groupDefaultExpanded: -1, // Expand all groups by default
+    animateRows: true,
+    getRowStyle: params => {
+        // Add custom row styling for group headers
+        if (params.data && params.data.groupHeader) {
+            return { fontWeight: 'bold', backgroundColor: '#f0f0f0' };
+        }
+    },
+    suppressRowClickSelection: true,
+};
+
+// Assuming you have a div with id 'myGrid' in your HTML
+new agGrid.Grid(document.getElementById('myGrid'), gridOptions);
